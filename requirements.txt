@@ -8,7 +8,5 @@ sentence-transformers
 google-generativeai
 python-dotenv
 openpyxl
-altair<5
 streamlit
-protobuf<=3.20.3
 pysqlite3-binary
