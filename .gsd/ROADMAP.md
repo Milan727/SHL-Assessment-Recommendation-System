@@ -17,7 +17,7 @@
 **Objective**: Build a robust script (using Selenium/Playwright or BeautifulSoup if feasible) to extract all SHL assessment details from their product catalog and store them efficiently.
 
 ### Phase 2: Knowledge Base & RAG Engine
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Implement the embedding generation for the catalog items, set up a local Vector DB (e.g., ChromaDB or FAISS), and connect the Gemini LLM via LangChain/LlamaIndex.
 
 ### Phase 3: Recommendation & Balancing Logic
