@@ -21,7 +21,7 @@
 **Objective**: Implement the embedding generation for the catalog items, set up a local Vector DB (e.g., ChromaDB or FAISS), and connect the Gemini LLM via LangChain/LlamaIndex.
 
 ### Phase 3: Recommendation & Balancing Logic
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Implement the core search logic that handles multi-domain queries (hard skills vs soft skills) and formats the output into the required structure.
 
 ### Phase 4: API Development
