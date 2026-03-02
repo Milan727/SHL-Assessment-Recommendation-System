@@ -10,16 +10,34 @@ class QueryRequest(BaseModel):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    return {"status": "healthy"}
 
 @app.post("/recommend")
 def recommend_assessment(req: QueryRequest):
     try:
-        recommendations = get_balanced_recommendations(req.query)
-        return {
-            "query": req.query,
-            "recommendations": recommendations
-        }
+        recommendations = get_balanced_recommendations(req.query, k=10)
+        
+        # Map to exact assignment schema
+        formatted = []
+        for rec in recommendations:
+            test_type_raw = rec.get("test_type", "")
+            # Convert test_type string to array
+            if isinstance(test_type_raw, str):
+                test_type_list = [t.strip() for t in test_type_raw.split("/") if t.strip()]
+            else:
+                test_type_list = test_type_raw if test_type_raw else []
+            
+            formatted.append({
+                "url": rec.get("url", rec.get("Assessment_url", "")),
+                "name": rec.get("name", rec.get("title", "Unknown")),
+                "adaptive_support": rec.get("adaptive_support", "No"),
+                "description": rec.get("description", rec.get("title", "")),
+                "duration": rec.get("duration", None),
+                "remote_support": rec.get("remote_support", "No"),
+                "test_type": test_type_list
+            })
+        
+        return {"recommended_assessments": formatted}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

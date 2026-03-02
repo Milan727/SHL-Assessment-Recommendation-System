@@ -62,8 +62,15 @@ def get_balanced_recommendations(query: str, k: int = 10):
         if url and url not in seen_urls:
             seen_urls.add(url)
             recommendations.append({
+                "url": url,
+                "name": d.metadata.get("title", "Unknown"),
                 "title": d.metadata.get("title", "Unknown"),
-                "Assessment_url": url
+                "Assessment_url": url,
+                "test_type": d.metadata.get("test_type", ""),
+                "adaptive_support": d.metadata.get("adaptive_support", "No"),
+                "description": d.metadata.get("description", d.metadata.get("title", "")),
+                "duration": d.metadata.get("duration", None),
+                "remote_support": d.metadata.get("remote_support", "No"),
             })
             
     # If filtering returned too few results because we lack metadata in test dataset, fallback to general search
@@ -74,8 +81,15 @@ def get_balanced_recommendations(query: str, k: int = 10):
             if url and url not in seen_urls:
                 seen_urls.add(url)
                 recommendations.append({
+                    "url": url,
+                    "name": d.metadata.get("title", "Unknown"),
                     "title": d.metadata.get("title", "Unknown"),
-                    "Assessment_url": url
+                    "Assessment_url": url,
+                    "test_type": d.metadata.get("test_type", ""),
+                    "adaptive_support": d.metadata.get("adaptive_support", "No"),
+                    "description": d.metadata.get("description", d.metadata.get("title", "")),
+                    "duration": d.metadata.get("duration", None),
+                    "remote_support": d.metadata.get("remote_support", "No"),
                 })
                 
     # Truncate to K max
