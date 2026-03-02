@@ -10,13 +10,22 @@ from src.analyzer import analyze_query
 
 CHROMA_PATH = "data/chroma_db"
 
+# GLOBAL Initialization of Vector Database to drastically speed up evaluation iteration
+embeddings = None
+vectorstore = None
+
+def init_db():
+    global embeddings, vectorstore
+    if vectorstore is None:
+        embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        vectorstore = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
+
 def get_balanced_recommendations(query: str, k: int = 10):
     # 1. Analyze Intent
     intent = analyze_query(query)
     
-    # 2. Init Vector Store
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    vectorstore = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
+    # 2. Init Vector Store (Cached)
+    init_db()
     
     docs = []
     

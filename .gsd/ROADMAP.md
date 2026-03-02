@@ -4,11 +4,11 @@
 > **Milestone**: v1.0
 
 ## Must-Haves (from SPEC)
-- [ ] Data Ingestion & Web Scraping Pipeline
-- [ ] Vector Database & Embeddings Setup
-- [ ] LLM RAG recommendation logic with multi-domain balancing
-- [ ] FastAPI Endpoints (`/health`, `/recommend`)
-- [ ] Evaluation script for Mean Recall@10
+- [x] Data Ingestion & Web Scraping Pipeline
+- [x] Vector Database & Embeddings Setup
+- [x] LLM RAG recommendation logic with multi-domain balancing
+- [x] FastAPI Endpoints (`/health`, `/recommend`)
+- [x] Evaluation script for Mean Recall@10
 
 ## Phases
 
@@ -29,5 +29,5 @@
 **Objective**: Wrap the recommendation engine in a FastAPI application that implements the `/health` and `/recommend` endpoints according to the strict JSON schema.
 
 ### Phase 5: Evaluation & Accuracy Tuning
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Run the engine against the `Gen_AI Dataset.xlsx` training dataset, measure the Mean Recall@10, iteratively improve the prompts/search, and output the final test CSV script.
