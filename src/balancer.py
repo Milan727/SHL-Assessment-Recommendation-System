@@ -2,10 +2,13 @@ import os
 import json
 from dotenv import load_dotenv
 
-# Streamlit Cloud ChromaDB SQLite3 Hack
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# Streamlit Cloud ChromaDB SQLite3 Hack (conditional)
+try:
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except ImportError:
+    pass
 
 load_dotenv()
 
