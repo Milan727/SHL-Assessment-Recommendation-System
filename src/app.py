@@ -1,18 +1,21 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from contextlib import asynccontextmanager
 from src.balancer import get_balanced_recommendations, init_db
 import uvicorn
+import threading
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Pre-load ML model + ChromaDB at startup so /recommend doesn't timeout
-    print("Pre-loading ML model and ChromaDB...")
-    init_db()
-    print("Model loaded successfully!")
-    yield
+app = FastAPI(title="SHL Assessment Recommendation API")
 
-app = FastAPI(title="SHL Assessment Recommendation API", lifespan=lifespan)
+# Pre-load model in background thread (doesn't block health checks)
+def _preload_model():
+    try:
+        print("Pre-loading ML model and ChromaDB...")
+        init_db()
+        print("Model loaded successfully!")
+    except Exception as e:
+        print(f"Model pre-load error: {e}")
+
+threading.Thread(target=_preload_model, daemon=True).start()
 
 class QueryRequest(BaseModel):
     query: str
