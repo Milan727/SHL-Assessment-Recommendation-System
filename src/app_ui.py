@@ -22,10 +22,10 @@ if st.button("Get Recommendations"):
             try:
                 # Initialize DB natively dynamically
                 init_db()
-                intent_obj = analyze_query(query)
-                recs = get_balanced_recommendations(query, intent_obj, k=k)
+                recs = get_balanced_recommendations(query, k=k)
                 
-                # Show detected intent explicitly mapping logic
+                # Show detected intent
+                intent_obj = analyze_query(query)
                 st.info(f"**Extracted Intent:** Needs Hard Skills: `{intent_obj.requires_hard_skills}` | Needs Soft Skills: `{intent_obj.requires_soft_skills}`")
                 
                 if recs:
