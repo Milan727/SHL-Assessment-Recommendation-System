@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+playwright
+pandas
+langchain
+langchain-google-genai
+chromadb
+sentence-transformers
+python-dotenv
+openpyxl
