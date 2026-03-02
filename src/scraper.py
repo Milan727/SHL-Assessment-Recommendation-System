@@ -26,7 +26,7 @@ def fetch_page_html(url, timeout=60000):
         
         try:
             page.goto(url, timeout=timeout)
-            page.wait_for_timeout(3000) # Let React/Vue render
+            page.wait_for_timeout(500) # Let React/Vue render faster
             html = page.content()
         except Exception as e:
             print(f"Error fetching {url}: {e}")
@@ -59,7 +59,7 @@ def scrape_catalog(test_mode=False):
     
     for category_id, test_type_label in TYPE_MAPPING.items():
         start = 0
-        limit = 60 if test_mode else 120 # fetch 5-10 pages max for time constraints
+        limit = 60 if test_mode else 1000 # Fetch all pages to ensure > 377 items 
         
         while start <= limit:
             url = f"{BASE_URL}{CATALOG_PATH}?start={start}&type={category_id}"

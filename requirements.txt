@@ -5,6 +5,8 @@ pandas
 langchain
 langchain-google-genai
 chromadb
-sentence-transformers
+sentence-transformers==4.37.2
+google-generativeai==0.8.4
 python-dotenv
-openpyxl
+openpyxl==3.1.5
+streamlit==1.32.0

@@ -1,29 +1,23 @@
 {
-    "title": "Phase 2: Knowledge Base & RAG Engine",
-    "branchName": "feature/phase-2-rag-engine",
+    "title": "Phase 3: Recommendation & Balancing Logic",
+    "branchName": "feature/phase-3-balancing-logic",
     "stories": [
         {
-            "id": "RAG-1",
-            "title": "Setup Vector Database and Document Loader",
-            "description": "Initialize a local ChromaDB instance and write a data ingestion script to load the scraped `data/shl_catalog.json` items into LangChain Document objects.",
+            "id": "RAG-5",
+            "title": "Implement Query Analyzer",
+            "description": "Create a new module `src/analyzer.py` that uses Gemini with Structured Output to analyze a given JD/query. It should return a JSON object with boolean flags: `requires_hard_skills` and `requires_soft_skills`.",
             "passes": false
         },
         {
-            "id": "RAG-2",
-            "title": "Implement Embedding Generation",
-            "description": "Configure the `sentence-transformers` library (e.g., `all-MiniLM-L6-v2`) to generate embeddings for the SHL catalog documents and bulk insert them into the ChromaDB collection.",
+            "id": "RAG-6",
+            "title": "Implement Balanced Retriever Pipeline",
+            "description": "Refactor RAG logic in `src/balancer.py` to route based on the analyzer. If both skills are needed, perform parallel parallel searches on ChromaDB with metadata filters (`test_type` containing 'Knowledge' for hard skills and 'Personality' for soft skills). Combine the top K results.",
             "passes": false
         },
         {
-            "id": "RAG-3",
-            "title": "Connect Gemini LLM via LangChain",
-            "description": "Set up the LangChain `ChatGoogleGenerativeAI` wrapper using the `GOOGLE_API_KEY` from the environment `.env` file.",
-            "passes": false
-        },
-        {
-            "id": "RAG-4",
-            "title": "Develop RAG Retrieval Chain",
-            "description": "Create a LangChain Retrieval QA chain that uses the ChromaDB retriever to pull the top K most relevant catalog items, feeding them into the Gemini LLM to answer user queries.",
+            "id": "RAG-7",
+            "title": "Format Assessment Output Schema",
+            "description": "Adjust the completion chain to verify the final LLM payload formats the recommendations exactly as a list of dictionaries comprising `title` and the associated `Assessment_url`, preparing it for Phase 4 API consumption.",
             "passes": false
         }
     ]
