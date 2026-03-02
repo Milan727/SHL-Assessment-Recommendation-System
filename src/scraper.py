@@ -59,7 +59,7 @@ def scrape_catalog(test_mode=False):
     
     for category_id, test_type_label in TYPE_MAPPING.items():
         start = 0
-        limit = 12 if test_mode else 300 # Limit pages strictly for test_mode
+        limit = 60 if test_mode else 120 # fetch 5-10 pages max for time constraints
         
         while start <= limit:
             url = f"{BASE_URL}{CATALOG_PATH}?start={start}&type={category_id}"
@@ -81,8 +81,18 @@ def scrape_catalog(test_mode=False):
                 
             start += 12
             
-    # Remove duplicates
-    unique_products = {p['url']: p for p in all_products}.values()
+    # Deduplicate and combine test types
+    unique_products_dict = {}
+    for p in all_products:
+        url = p['url']
+        if url in unique_products_dict:
+            # If it already exists, combine the test_type strings if not already in there
+            if p['test_type'] not in unique_products_dict[url]['test_type']:
+                unique_products_dict[url]['test_type'] += f", {p['test_type']}"
+        else:
+            unique_products_dict[url] = p
+            
+    unique_products = list(unique_products_dict.values())
     
     os.makedirs('data', exist_ok=True)
     with open('data/shl_catalog.json', 'w') as f:
@@ -92,4 +102,4 @@ def scrape_catalog(test_mode=False):
     return unique_products
 
 if __name__ == "__main__":
-    scrape_catalog(test_mode=True)
+    scrape_catalog(test_mode=False)

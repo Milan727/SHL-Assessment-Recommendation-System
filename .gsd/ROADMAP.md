@@ -13,7 +13,7 @@
 ## Phases
 
 ### Phase 1: Data Scraping & Catalog Ingestion
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Build a robust script (using Selenium/Playwright or BeautifulSoup if feasible) to extract all SHL assessment details from their product catalog and store them efficiently.
 
 ### Phase 2: Knowledge Base & RAG Engine
