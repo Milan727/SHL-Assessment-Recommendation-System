@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from src.balancer import get_balanced_recommendations, init_db
 import uvicorn
@@ -19,6 +20,10 @@ threading.Thread(target=_preload_model, daemon=True).start()
 
 class QueryRequest(BaseModel):
     query: str
+
+@app.get("/")
+def root():
+    return RedirectResponse(url="/docs")
 
 @app.get("/health")
 def health_check():
