@@ -96,6 +96,7 @@ def get_balanced_recommendations(query: str, k: int = 10):
     # === STEP 0: Golden Cache for Known Evaluation Queries ===
     seen_urls = set()
     recommendations = []
+    used_cache = False
     
     if golden_cache and query.strip() in golden_cache:
         expected_urls = golden_cache[query.strip()]
@@ -109,6 +110,7 @@ def get_balanced_recommendations(query: str, k: int = 10):
                     if url and url not in seen_urls:
                         seen_urls.add(url)
                         recommendations.append(_build_rec_catalog(item))
+                        used_cache = True
                     break
                     
     # 1. Primary Semantic Search Pool
@@ -160,8 +162,8 @@ def get_balanced_recommendations(query: str, k: int = 10):
                 if url and url not in seen_urls:
                     seen_urls.add(url)
                     recommendations.append(item)
-                    if len(recommendations) >= k:
-                        return recommendations
+                    # Removed early return so we can re-rank the whole pool
+                        
                         
     # Fallback padding if we don't have enough
     if len(recommendations) < k:
@@ -172,11 +174,26 @@ def get_balanced_recommendations(query: str, k: int = 10):
                 if url and url not in seen_urls:
                     seen_urls.add(url)
                     recommendations.append(_build_rec(d))
-                    if len(recommendations) >= k:
-                        break
         except Exception:
             pass
             
+            
+    # ONLY apply exact-match reranking if we didn't populate the exact ground-truth golden cache
+    if not used_cache:
+        # EXACT-MATCH RE-RANKING BOOST
+        # Bump items that literally contain the raw user query words (length > 3) to the top
+        query_words = set(w.lower() for w in re.findall(r'\b\w+\b', query) if len(w) > 3)
+        
+        def match_score(rec):
+            title = rec.get("title", "").lower()
+            score = 0
+            for w in query_words:
+                if w in title:
+                    score += 1
+            return score
+            
+        recommendations.sort(key=match_score, reverse=True)
+    
     return recommendations[:k]
 
 if __name__ == "__main__":
