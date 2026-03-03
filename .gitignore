@@ -25,3 +25,18 @@ logs/
 
 # macOS
 .DS_Store
+
+# Project bloat/metadata
+.agent/
+.gemini/
+.gsd/
+adapters/
+docs/
+scripts/
+*.pdf
+prd.json
+model_capabilities.yaml
+test_stealth*.py
+PROJECT_RULES.md
+GSD-STYLE.md
+
