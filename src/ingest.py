@@ -1,5 +1,6 @@
 import os
 import json
+import re
 from langchain_core.documents import Document
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -7,6 +8,25 @@ from langchain_huggingface import HuggingFaceEmbeddings
 # Paths
 DATA_PATH = "data/shl_catalog.json"
 CHROMA_PATH = "data/chroma_db"
+
+def extract_keywords_from_url(url):
+    """Extract searchable keywords from URL slug."""
+    slug = url.rstrip("/").split("/")[-1]
+    # Replace hyphens with spaces and clean up
+    keywords = slug.replace("-", " ")
+    # Remove common suffixes
+    keywords = re.sub(r'\b(new|solution|sift out|report)\b', '', keywords, flags=re.IGNORECASE).strip()
+    return keywords
+
+def build_rich_content(item):
+    """Build enriched page_content for better semantic matching."""
+    title = item["title"]
+    test_type = item["test_type"]
+    description = item.get("description", title)
+    
+    content = f"Assessment: {title}\nCategory: {test_type}\nDescription: {description}"
+    
+    return content
 
 def main():
     print(f"Loading data from {DATA_PATH}...")
@@ -17,11 +37,10 @@ def main():
     with open(DATA_PATH, "r") as f:
         catalog = json.load(f)
 
-    # Convert to LangChain Document objects
+    # Convert to LangChain Document objects with enriched content
     documents = []
     for item in catalog:
-        # We enrich the page_content to provide maximum context for semantic search
-        page_content = f"Title: {item['title']}\nTest Type: {item['test_type']}"
+        page_content = build_rich_content(item)
         
         doc = Document(
             page_content=page_content,
@@ -33,13 +52,13 @@ def main():
         )
         documents.append(doc)
         
-    print(f"Created {len(documents)} Document objects.")
+    print(f"Created {len(documents)} enriched Document objects.")
+    print(f"Sample content:\n{documents[0].page_content}\n")
 
     print("Initializing HuggingFace Embeddings (all-MiniLM-L6-v2)...")
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
     print(f"Building Chroma vector store at {CHROMA_PATH}...")
-    # This will create or update the DB on disk
     vectorstore = Chroma.from_documents(
         documents=documents,
         embedding=embeddings,

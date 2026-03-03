@@ -8,6 +8,13 @@ from src.balancer import get_balanced_recommendations
 DATASET_PATH = "data/Gen_AI Dataset.xlsx"
 OUTPUT_PATH = "data/results.csv"
 
+def normalize_url(url):
+    """Normalize SHL URLs by standardizing the path format."""
+    url = url.strip().rstrip("/") + "/"
+    # Normalize both URL formats to a common canonical form
+    url = url.replace("/solutions/products/product-catalog/", "/products/product-catalog/")
+    return url.lower()
+
 def evaluate_recall():
     if not os.path.exists(DATASET_PATH):
         print(f"Error: Target dataset {DATASET_PATH} not found.")
@@ -30,22 +37,21 @@ def evaluate_recall():
     
     print(f"Executing RAG pipeline evaluation across {total_queries} records...")
     
-    # Iterate through the rows using tqdm for a progress bar
     for index, row in tqdm(df.iterrows(), total=total_queries, desc="Evaluating"):
         query = str(row["Query"])
         expected_url = str(row["Assessment_url"]).strip()
+        expected_normalized = normalize_url(expected_url)
         
         try:
-            # Fetch Top 10 RAG Recommendations
             recommendations = get_balanced_recommendations(query, k=10)
-            recommended_urls = [rec.get("Assessment_url", "").strip() for rec in recommendations]
+            recommended_urls = [rec.get("Assessment_url", rec.get("url", "")).strip() for rec in recommendations]
+            recommended_normalized = [normalize_url(u) for u in recommended_urls]
             
-            # Check for a HIT (Recall@10)
-            hit = expected_url in recommended_urls
+            # Check for a HIT using normalized URLs
+            hit = expected_normalized in recommended_normalized
             if hit:
                 hits += 1
                 
-            # Log Result
             results.append({
                 "Query": query,
                 "Expected_URL": expected_url,
@@ -61,8 +67,6 @@ def evaluate_recall():
                 "Hit": False,
                 "Predicted_URLs_List": f"ERROR: {str(e)}"
             })
-                
-        pass
             
     # Calculate Mean Recall@10
     recall = (hits / total_queries) * 100 if total_queries > 0 else 0
