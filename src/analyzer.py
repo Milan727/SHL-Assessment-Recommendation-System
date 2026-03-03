@@ -48,9 +48,11 @@ SYNONYM_MAP = {
     r'\b(consultant|adviser|advisor)\b': ['consultant', 'adviser', 'sales', 'professional'],
     r'\b(bank|financial|accounting)\b': ['bank', 'finance', 'financial', 'accounting'],
     r'\b(data analyst|data science|analytics|bi)\b': ['data', 'analyst', 'sql', 'analysis', 'ssas'],
+    r'\b(javascript|java\s*script|js|typescript|react|angular|node\.?js|express)\b': ['javascript', 'programming', 'software', 'developer'],
     r'\b(java)\b': ['java', 'programming', 'software', 'developer'],
     r'\b(python)\b': ['python', 'programming', 'software', 'developer'],
-    r'\b(sql|database)\b': ['sql', 'database', 'programming', 'software'],
+    r'\b(sql)\b': ['sql', 'database', 'programming', 'software'],
+    r'\b(database|mongodb|postgresql|mysql|redis)\b': ['database', 'sql', 'programming'],
     r'\b(developer|engineer|coder|programmer)\b': ['programming', 'software', 'developer', 'engineer'],
     # Levels
     r'\b(graduate|entry|junior|fresher|university)\b': ['entry', 'graduate', 'junior', 'fundamental'],
