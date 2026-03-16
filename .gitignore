@@ -14,10 +14,15 @@ env/
 .idea/
 
 # Data
-data/
-*.csv
 *.xlsx
-*.json
+data/results.csv
+data/submission.csv
+data/milan_tiwari.csv
+
+# Required Data (Must be untracked/unignored)
+!data/shl_catalog.json
+!data/golden_cache.json
+!data/chroma_db/
 
 # Logs
 logs/
