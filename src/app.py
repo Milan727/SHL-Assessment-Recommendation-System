@@ -66,7 +66,8 @@ def recommend_assessment(req: QueryRequest):
         
         return {"recommended_assessments": formatted}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import traceback
+        raise HTTPException(status_code=500, detail=traceback.format_exc())
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
