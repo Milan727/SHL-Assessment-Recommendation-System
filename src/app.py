@@ -5,7 +5,17 @@ from src.balancer import get_balanced_recommendations, init_db
 import uvicorn
 import threading
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="SHL Assessment Recommendation API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Pre-load model in background thread (doesn't block health checks)
 def _preload_model():
